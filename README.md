@@ -1,10 +1,6 @@
 # JavaScript Stack from Scratch
 
-[![Build Status](https://travis-ci.org/verekia/js-stack-from-scratch.svg?branch=master)](https://travis-ci.org/verekia/js-stack-from-scratch)
-[![Release](https://img.shields.io/github/release/verekia/js-stack-from-scratch.svg?style=flat-square)](https://github.com/verekia/js-stack-from-scratch/releases)
-[![Dependencies](https://img.shields.io/david/verekia/js-stack-boilerplate.svg?style=flat-square)](https://david-dm.org/verekia/js-stack-boilerplate)
-[![Dev Dependencies](https://img.shields.io/david/dev/verekia/js-stack-boilerplate.svg?style=flat-square)](https://david-dm.org/verekia/js-stack-boilerplate?type=dev)
-[![Gitter](https://img.shields.io/gitter/room/js-stack-from-scratch/Lobby.svg?style=flat-square)](https://gitter.im/js-stack-from-scratch/)
+[![Build Status](https://travis-ci.org/verekia/js-stack-from-scratch.svg?branch=master)](https://travis-ci.org/verekia/js-stack-from-scratch) [![Join the chat at https://gitter.im/js-stack-from-scratch/Lobby](https://badges.gitter.im/js-stack-from-scratch/Lobby.svg)](https://gitter.im/js-stack-from-scratch/Lobby)
 
 [![React](/img/react-padded-90.png)](https://facebook.github.io/react/)
 [![Redux](/img/redux-padded-90.png)](http://redux.js.org/)
@@ -16,66 +12,67 @@
 [![Webpack](/img/webpack-padded-90.png)](https://webpack.github.io/)
 [![Bootstrap](/img/bootstrap-padded-90.png)](http://getbootstrap.com/)
 
-Welcome to my modern JavaScript stack tutorial: **JavaScript Stack from Scratch**.
+>Это русскоязычная версия руководства Джонатана Верекии ([@verekia](https://twitter.com/verekia)). Оригинальное руководство расположено [здесь](https://github.com/verekia/js-stack-from-scratch). **Начата [работа](https://github.com/UsulPro/js-stack-from-scratch/issues/8) по переводу второй части**
 
-> 🎉 **This is the V2 of the tutorial, major changes happened since the 2016 release. Check the [Change Log](/CHANGELOG.md)!**
+Добро пожаловать в мое современное руководство по стеку технологий JavaScript: **Стек технологий JavaScript с нуля**.
 
-This is a straight-to-the-point guide to assembling a JavaScript stack. It requires some general programming knowledge, and JavaScript basics. **It focuses on wiring tools together** and giving you the **simplest possible example** for each tool. You can see this tutorial as *a way to write your own boilerplate from scratch*. Since the goal of this tutorial is to assemble various tools, I do not go into details about how these tools work individually. Refer to their documentation or find other tutorials if you want to acquire deeper knowledge in them.
+> 🎉 **Это вторая версия руководства. По сравнению с предыдущм релизом 2016г произведены значительные изменения. См. [Change Log](/CHANGELOG.md)!**
 
-You don't need to use this entire stack if you build a simple web page with a few JS interactions of course (a combination of Browserify/Webpack + Babel + jQuery is enough to be able to write ES6 code in different files), but if you want to build a web app that scales, and need help setting things up, this tutorial will work great for you.
 
-A big chunk of the stack described in this tutorial uses React. If you are beginning and just want to learn React, [create-react-app](https://github.com/facebookincubator/create-react-app) will get you up and running with a React environment very quickly with a pre-made configuration. I would for instance recommend this approach to someone who arrives in a team that's using React and needs to catch up with a learning playground. In this tutorial you won't use a pre-made configuration, because I want you to understand everything that's happening under the hood.
+Это практико-ориентированное пособие по применению JavaScript технологий. Вам потребуются общие знания по программированию и основы JavaScript. Это пособие **нацелено на интеграцию необходимых инструментов** и предоставляет **максимально простые примеры** для каждого инструмента. Вы можете рассматривать данный документ, как *возможность создать свой собственный шаблонный проект с нуля*. Поскольку целью этого руководства является сборка различных инструментов, я не буду вдаваться в детали по каждому из них. Если вы хотите получить по ним более глубокие знания, изучайте их документацию или другие руководства.
 
-Code examples are available for each chapter, and you can run them all with `yarn && yarn start`. I recommend writing everything from scratch yourself by following the **step-by-step instructions** though.
+Конечно, вам не нужны все эти технологии, если вы делаете простую веб страницу с парой JS функций (комбинации Browserify / Webpack + Babel + jQuery достаточно, чтобы написать ES6 код в нескольких файлах), но если вы собираетесь создать масштабируемое веб приложение, и вам нужно все правильно настроить, то это руководство вам отлично подходит.
 
-Final code available in the [JS-Stack-Boilerplate repository](https://github.com/verekia/js-stack-boilerplate), and in the [releases](https://github.com/verekia/js-stack-from-scratch/releases). There is a [live demo](https://js-stack.herokuapp.com/) too.
+В большой части технологий, описываемых здесь, используется React. Если вы только начинаете использовать React и просто хотите изучить его, то [create-react-app](https://github.com/facebookincubator/create-react-app) поможет вам и кратко ознакомит с инфраструктурой React на основе предустановленной конфигурации. Я бы, например, порекомендовал такой подход для тех, кому нужно влиться в команду, использующую React, и на чем-то потренироваться, чтобы подтянуть свои знания. В этом руководстве мы не будем пользоваться предустановленными конфигурациями, поскольку я хочу, чтобы вы полностью понимали все, что происходит "под капотом".
 
-Works on Linux, macOS, and Windows.
+В каждой части руководства имеются примеры кода, и вы можете запускать их через `yarn && yarn start`. Однако я рекомендую писать все с нуля самостоятельно, следуя **пошаговым инструкциям**.
 
-## Table of contents
+Итоговый код данного руководства доступен в отдельном репозитории: [JS-Stack-Boilerplate repository](https://github.com/verekia/js-stack-boilerplate). Он работает под Linux, macOS, и Windows.
 
-[01 - Node, Yarn, `package.json`](/tutorial/01-node-yarn-package-json.md#readme)
+## Содержание
 
-[02 - Babel, ES6, ESLint, Flow, Jest, Husky](/tutorial/02-babel-es6-eslint-flow-jest-husky.md#readme)
+[01 - Node, Yarn, `package.json`](/tutorial/01-node-yarn-package-json)
 
-[03 - Express, Nodemon, PM2](/tutorial/03-express-nodemon-pm2.md#readme)
+[02 - Babel, ES6, ESLint, Flow, Jest, Husky](/tutorial/02-babel-es6-eslint-flow-jest-husky)
 
-[04 - Webpack, React, HMR](/tutorial/04-webpack-react-hmr.md#readme)
+[03 - Express, Nodemon, PM2](/tutorial/03-express-nodemon-pm2)
 
-[05 - Redux, Immutable, Fetch](/tutorial/05-redux-immutable-fetch.md#readme)
+[04 - Webpack, React, HMR](/tutorial/04-webpack-react-hmr)
 
-[06 - React Router, Server-Side Rendering, Helmet](/tutorial/06-react-router-ssr-helmet.md#readme)
+[05 - Redux, Immutable, Fetch](/tutorial/05-redux-immutable-fetch)
 
-[07 - Socket.IO](/tutorial/07-socket-io.md#readme)
+[06 - React Router, Server-Side Rendering, Helmet](/tutorial/06-react-router-ssr-helmet)
 
-[08 - Bootstrap, JSS](/tutorial/08-bootstrap-jss.md#readme)
+[07 - Socket.IO](/tutorial/07-socket-io)
 
-[09 - Travis, Coveralls, Heroku](/tutorial/09-travis-coveralls-heroku.md#readme)
+[08 - Bootstrap, JSS](/tutorial/08-bootstrap-jss)
 
-## Coming up next
+[09 - Travis, Coveralls, Heroku](/tutorial/09-travis-coveralls-heroku)
 
-Setting up your editor (Atom first), MongoDB, Progressive Web App.
+## Далее планируется
 
-## Translations
+Настройка вашего редактора (Atom и другие), MongoDB, Прогрессивное веб приложение (Progressive Web App).
 
-If you want to add your translation, please read the [translation recommendations](/how-to-translate.md) to get started!
+## Переводы на другие языки
 
-### V2
+Если вы хотите добавить перевод на другой язык, пожалуйста читайте [рекомендации по переводу](/how-to-translate.md) чтобы начать!
 
-Your link here soon ;)
+### Версия 2
 
-Check out the [ongoing translations](https://github.com/verekia/js-stack-from-scratch/issues/147).
+- [Русский _в процессе превода_](https://github.com/UsulPro/js-stack-from-scratch) by [React Theming](https://github.com/sm-react/react-theming)
 
-### V1
+### Версия 1
 
 - [中文](https://github.com/pd4d10/js-stack-from-scratch) by [@pd4d10](http://github.com/pd4d10)
 - [Italiano](https://github.com/fbertone/js-stack-from-scratch) by [Fabrizio Bertone](https://github.com/fbertone)
 - [日本語](https://github.com/takahashim/js-stack-from-scratch) by [@takahashim](https://github.com/takahashim)
-- [Русский](https://github.com/UsulPro/js-stack-from-scratch) by [React Theming](https://github.com/sm-react/react-theming)
+- [Русский](https://github.com/UsulPro/js-stack-from-scratch-v1-rus) by [React Theming](https://github.com/sm-react/react-theming)
 - [ไทย](https://github.com/MicroBenz/js-stack-from-scratch) by [MicroBenz](https://github.com/MicroBenz)
 
-## Credits
+## Сведения
 
-Created by [@verekia](https://twitter.com/verekia) – [verekia.com](http://verekia.com/).
+Создано [@verekia](https://twitter.com/verekia) – [verekia.com](http://verekia.com/).
 
-License: MIT
+Переведено [@usulpro](https://github.com/UsulPro) - [react-theming](https://github.com/sm-react/react-theming)
+
+Лицензия: MIT
