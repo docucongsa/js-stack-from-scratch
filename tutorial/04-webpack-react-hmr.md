@@ -27,7 +27,7 @@ import { APP_CONTAINER_SELECTOR } from '../shared/config'
 document.querySelector(APP_CONTAINER_SELECTOR).innerHTML = '<h1>Hello Webpack!</h1>'
 ```
 
-If you want to use some of the most recent ES features in your client code, like `Promise`s, you need to include the [Babel Polyfill](https://babeljs.io/docs/usage/polyfill/) before anything else in in your bundle.
+If you want to use some of the most recent ES features in your client code, like `Promise`s, you need to include the [Babel Polyfill](https://babeljs.io/docs/usage/polyfill/) before anything else in your bundle.
 
 - Run `yarn add babel-polyfill`
 
@@ -59,9 +59,9 @@ export default {
     './src/client',
   ],
   output: {
-    filename: 'bundle.js',
-    path: path.resolve(__dirname, 'dist/js'),
-    publicPath: `http://localhost:${WDS_PORT}/dist/js/`,
+    filename: 'js/bundle.js',
+    path: path.resolve(__dirname, 'dist'),
+    publicPath: isProd ? '/static/' : `http://localhost:${WDS_PORT}/dist/`,
   },
   module: {
     rules: [
@@ -78,7 +78,7 @@ export default {
 }
 ```
 
-This file is used to describe how our bundle should be assembled: `entry` is the starting point of our app, `output.filename` is the name of the bundle to generate, `output.path` and `output.publicPath` describe the destination folder and URL. We put the bundle in a `dist` folder, which will contain things that are generated automatically (unlike the declarative CSS we created earlier which lives in `public`). `module.rules` is where you tell Webpack to apply some treatment to some type of files. Here we say that we want all `.js` and `.jsx` (for React) files except the ones in `node_modules` to go through something called `babel-loader`. We also want these two extensions to `resolve`. Finally, we declare a port for Webpack Dev Server.
+This file is used to describe how our bundle should be assembled: `entry` is the starting point of our app, `output.filename` is the name of the bundle to generate, `output.path` and `output.publicPath` describe the destination folder and URL. We put the bundle in a `dist` folder, which will contain things that are generated automatically (unlike the declarative CSS we created earlier which lives in `public`). `module.rules` is where you tell Webpack to apply some treatment to some type of files. Here we say that we want all `.js` and `.jsx` (for React) files except the ones in `node_modules` to go through something called `babel-loader`. We also want these two extensions to be used to `resolve` modules when we `import` them. Finally, we declare a port for Webpack Dev Server.
 
 **Note**: The `.babel.js` extension is a Webpack feature to apply our Babel transformations to this config file.
 
@@ -103,7 +103,7 @@ Let's update our `scripts` to implement all this, and improve some other tasks a
   "dev:wds": "webpack-dev-server --progress",
   "prod:build": "rimraf lib dist && babel src -d lib --ignore .test.js && cross-env NODE_ENV=production webpack -p --progress",
   "prod:start": "cross-env NODE_ENV=production pm2 start lib/server && pm2 logs",
-  "prod:stop": "pm2 delete all",
+  "prod:stop": "pm2 delete server",
   "lint": "eslint src webpack.config.babel.js --ext .js,.jsx",
   "test": "yarn lint && flow && jest --coverage",
   "precommit": "yarn test",
@@ -199,9 +199,9 @@ const App = () => <h1>Hello React!</h1>
 export default App
 ```
 
-Since we use the JSX syntax here, we have to tell Babel that it needs to transform it as well.
+Since we use the JSX syntax here, we have to tell Babel that it needs to transform it with the `babel-preset-react` preset. And while we're at it, we're also going to add a Babel plugin called `flow-react-proptypes` which automatically generates PropTypes from Flow annotations for your React components.
 
-- Run `yarn add --dev babel-preset-react` and add `react` to your `.babelrc` file like so:
+- Run `yarn add --dev babel-preset-react babel-plugin-flow-react-proptypes` and edit your `.babelrc` file like so:
 
 ```json
 {
@@ -209,6 +209,9 @@ Since we use the JSX syntax here, we have to tell Babel that it needs to transfo
     "env",
     "flow",
     "react"
+  ],
+  "plugins": [
+    "flow-react-proptypes"
   ]
 }
 ```
