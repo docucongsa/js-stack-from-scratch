@@ -1,14 +1,14 @@
-# 04 - Webpack, React, and Hot Module Replacement
+# 04 - Webpack, React и Hot Module Replacement
 
-Code for this chapter available [here](https://github.com/verekia/js-stack-walkthrough/tree/master/04-webpack-react-hmr).
+Код для этой главы доступен [здесь](https://github.com/verekia/js-stack-walkthrough/tree/master/04-webpack-react-hmr).
 
 ## Webpack
 
-> 💡 **[Webpack](https://webpack.js.org/)** is a *module bundler*. It takes a whole bunch of various source files, processes them, and assembles them into one (usually) JavaScript file called a bundle, which is the only file your client will execute.
+> 💡 **[Webpack](https://webpack.js.org/)** - *сборщик модулей*. Он берет все возможные исходные файлы, обрабатывает их и собирает в один (обычно) JavaScript файл, называемый сборкой, и это будет единственный файл исполняемый на клиенте.
 
-Let's create some very basic *hello world* and bundle it with Webpack.
+Давайте создадим какой-нибудь простой *hello world* и соберем его с помощью Webpack.
 
-- In `src/shared/config.js`, add the following constants:
+- В `src/shared/config.js` добавьте следующие константы:
 
 ```js
 export const WDS_PORT = 7000
@@ -17,7 +17,7 @@ export const APP_CONTAINER_CLASS = 'js-app'
 export const APP_CONTAINER_SELECTOR = `.${APP_CONTAINER_CLASS}`
 ```
 
-- Create an `src/client/index.js` file containing:
+- Создайте файл `src/client/index.js`, содержащий:
 
 ```js
 import 'babel-polyfill'
@@ -27,13 +27,13 @@ import { APP_CONTAINER_SELECTOR } from '../shared/config'
 document.querySelector(APP_CONTAINER_SELECTOR).innerHTML = '<h1>Hello Webpack!</h1>'
 ```
 
-If you want to use some of the most recent ES features in your client code, like `Promise`s, you need to include the [Babel Polyfill](https://babeljs.io/docs/usage/polyfill/) before anything else in your bundle.
+Если вы хотите использовать новейшие возможности ES в клиентском коде, такие как `Promise`, то вам нужно включить [Babel Polyfill](https://babeljs.io/docs/usage/polyfill/) до какого-либо другого кода в сборке.
 
-- Run `yarn add babel-polyfill`
+- Запустите `yarn add babel-polyfill`
 
-If you run ESLint on this file, it will complain about `document` being undefined.
+Если вы запустите ESLint на этом файле, он будет жаловаться, что `document` undefined.
 
-- Add the following to `env` in your `.eslintrc.json` to allow the use of `window` and `document`:
+- Добавьте раздел `env` в `.eslintrc.json`, чтобы позволить использование `window` и `document`:
 
 ```json
 "env": {
@@ -42,9 +42,9 @@ If you run ESLint on this file, it will complain about `document` being undefine
 }
 ```
 
-Alright, we now need to bundle this ES6 client app into an ES5 bundle.
+Хорошо, теперь нам нужно собрать это клиентское ES6 приложение в ES5 сборку.
 
-- Create a `webpack.config.babel.js` file containing:
+- Создайте файл `webpack.config.babel.js` содержащий:
 
 ```js
 // @flow
@@ -78,23 +78,24 @@ export default {
 }
 ```
 
-This file is used to describe how our bundle should be assembled: `entry` is the starting point of our app, `output.filename` is the name of the bundle to generate, `output.path` and `output.publicPath` describe the destination folder and URL. We put the bundle in a `dist` folder, which will contain things that are generated automatically (unlike the declarative CSS we created earlier which lives in `public`). `module.rules` is where you tell Webpack to apply some treatment to some type of files. Here we say that we want all `.js` and `.jsx` (for React) files except the ones in `node_modules` to go through something called `babel-loader`. We also want these two extensions to be used to `resolve` modules when we `import` them. Finally, we declare a port for Webpack Dev Server.
+Этот файл используется для описания того, как должна быть устроена наша сборка: `entry` - стартовая точка нашего приложения, `output.filename` - имя генерируемой сборки, `output.path` и `output.publicPath` описывают путь до папки со сборкой и URL. Мы поместим сборку в папку  `dist`, которая будет содержать автоматически генерируемые вещи (в отличие от обитающих в `public` декларативных CSS, которые мы создавали до этого). В `module.rules` мы сообщаем Webpack к каким типам файлов применять какие обработчики. Здесь мы говорим, что хотим пропускать все `.js` и `.jsx` (для реакта) файлы через нечто, называемое `babel-loader`, за исключением того, что находится в `node_modules`. Мы также хотим *разрешать* (`resolve`) эти два расширения при `import` модулей (т.е. эти расширения можно будет опускать при импорте - прим. пер.)
 
-**Note**: The `.babel.js` extension is a Webpack feature to apply our Babel transformations to this config file.
+**Примечание**: Расширение `.babel.js` сообщает Webpack применять трансформации Babel к данному конфигурационному файлу. 
 
-`babel-loader` is a plugin for Webpack that transpiles your code just like we've been doing since the beginning of this tutorial. The only difference is that this time, the code will end up running in the browser instead of your server.
+`babel-loader` - это плагин для Webpack, транспилирующий код, так же как мы это делали с начала этого руководства. Единственное на данный момент отличие, что этот код исполняется в браузере а не на сервере.
 
-- Run `yarn add --dev webpack webpack-dev-server babel-core babel-loader`
+- Запустите `yarn add --dev webpack webpack-dev-server babel-core babel-loader`
 
 `babel-core` is a peer-dependency of `babel-loader`, so we installed it as well.
+Мы установили также `babel-core`, поскольку это peer-dependency (требуемая зависимость) для `babel-loader`.
 
-- Add `/dist/` to your `.gitignore`
+- Добавьте `/dist/` в `.gitignore`
 
-### Tasks update
+### Обновление задач
 
-In development mode, we are going to use `webpack-dev-server` to take advantage of Hot Module Reloading (later in this chapter), and in production we'll simply use `webpack` to generate bundles. In both cases, the `--progress` flag is useful to display additional information when Webpack is compiling your files. In production, we'll also pass the `-p` flag to `webpack` to minify our code, and the `NODE_ENV` variable set to `production`.
+В режиме разработки мы будем использовать `webpack-dev-server` чтобы пользоваться преимуществами Hot Module Reloading (позже в этой главе), а в продакшене мы просто используем `webpack`, чтобы сгенерировать сборку. В обоих случаях, флаг `--progress` будет полезен для вывода дополнительной информации когда Webpack компилирует файлы. В продакшене мы также передаем в `webpack` флаг `-p` для минификации кода и переменную `NODE_ENV` установленную в `production`.
 
-Let's update our `scripts` to implement all this, and improve some other tasks as well:
+Давайте обновим наши `scripts` чтобы реализовать это, а также улучшим некоторые другие задачи:
 
 ```json
 "scripts": {
@@ -111,11 +112,11 @@ Let's update our `scripts` to implement all this, and improve some other tasks a
 },
 ```
 
-In `dev:start` we explicitly declare file extensions to monitor, `.js` and `.jsx`, and add `dist` in the ignored directories.
+В `dev:start` мы явно указываем расширения для наблюдения: `.js` и `.jsx`, и добавляем `dist` в игнорируемые директории.
 
-We created a separate `lint` task and added `webpack.config.babel.js` to the files to lint.
+Мы создали отдельную задачу `lint` и добавили `webpack.config.babel.js` в список проверяемых файлов.
 
-- Next, let's create the container for our app in `src/server/render-app.js`, and include the bundle that will be generated:
+- Затем давайте создадим контейнер для нашего приложения в `src/server/render-app.js` и включим его в генерируемую сборку:
 
 ```js
 // @flow
