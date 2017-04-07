@@ -1,32 +1,32 @@
 # 05 - Redux, Immutable, and Fetch
 
-Code for this chapter available [here](https://github.com/verekia/js-stack-walkthrough/tree/master/05-redux-immutable-fetch).
+Код для этой части статьи доступен [здесь](https://github.com/verekia/js-stack-walkthrough/tree/master/05-redux-immutable-fetch).
 
-In this chapter we will hook up React and Redux to make a very simple app. The app will consist of a message and a button. The message changes when the user clicks the button.
+В этой части мы соединим React и Redux в процессе написания простого приложения. Приложение будет содержать сообщение и кнопку. Сообщение будет меняться, когда пользователь кликнет на кнопку.
 
-Before we start, here is a very quick introduction to ImmutableJS, which is completely unrelated to React and Redux, but will be used in this chapter.
+Перед тем как мы начнем, здесь будет быстрое введение в ImmutableJS, которое не связано с React и Redux, но будет использованно в этой главе.
 
 ## ImmutableJS
 
-> 💡 **[ImmutableJS](https://facebook.github.io/immutable-js/)** (or just Immutable) is a library by Facebook to manipulate immutable collections, like lists and maps. Any change made on an immutable object returns a new object without mutating the original object.
+> 💡 **[ImmutableJS](https://facebook.github.io/immutable-js/)** (или просто Immutable) библиотека разработанная компанией Facebook для манипулирования неизменяемыми коллекциями, например списки и итерируемые объекты. Любое изменение неизменяемого объекта возвращает новый объект без изменения первоначального объекта.
 
-For instance, instead of doing:
+Например, вместо следующих действий:
 
 ```js
 const obj = { a: 1 }
-obj.a = 2 // Mutates `obj`
+obj.a = 2 // изменение `obj`
 ```
 
-You would do:
+Мы должны делать так:
 
 ```js
 const obj = Immutable.Map({ a: 1 })
-obj.set('a', 2) // Returns a new object without mutating `obj`
+obj.set('a', 2) // возвращает новый объект без изменения `obj`
 ```
 
-This approach follows the **functional programming** paradigm, which works really well with Redux.
+Этот подход следует парадигме **функциональное программирование**, который отлично работает с Redux.
 
-When creating immutable collections, a very convenient method is `Immutable.fromJS()`, which takes any regular JS object or array and returns a deeply immutable version of it:
+Когда мы создаем неизменяемую коллекцию, есть очень удобный метод `Immutable.fromJS()`, который берет обычный JS объект или массив и возвращает неизменияемую версию:
 
 ```js
 const immutablePerson = Immutable.fromJS({
@@ -44,17 +44,17 @@ console.log(immutablePerson)
  */
 ```
 
-- Run `yarn add immutable@4.0.0-rc.2`
+- Запустите в консоли `yarn add immutable@4.0.0-rc.2`
 
 ## Redux
 
-> 💡 **[Redux](http://redux.js.org/)** is a library to handle the lifecycle of your application. It creates a *store*, which is the single source of truth of the state of your app at any given time.
+> 💡 **[Redux](http://redux.js.org/)** библиотека для управления состоянием вашего приложения. Она создает *store (хранилище)*, который является единственным источником истины состояния вашего приложения в любой момент времени.
 
-Let's start with the easy part, declaring our Redux actions:
+Начнем с простой части, объявим наши Redux actions (действия):
 
-- Run `yarn add redux redux-actions`
+- Запустите в консоли `yarn add redux redux-actions`
 
-- Create a `src/client/action/hello.js` file containing:
+- Создайте файл `src/client/action/hello.js` содержащий:
 
 ```js
 // @flow
@@ -66,9 +66,9 @@ export const SAY_HELLO = 'SAY_HELLO'
 export const sayHello = createAction(SAY_HELLO)
 ```
 
-This file exposes an *action*, `SAY_HELLO`, and its *action creator*, `sayHello`, which is a function. We use [`redux-actions`](https://github.com/acdlite/redux-actions) to reduce the boilerplate associated with Redux actions. `redux-actions` implement the [Flux Standard Action](https://github.com/acdlite/flux-standard-action) model, which makes *action creators* return objects with the `type` and `payload` attributes.
+Этот файл предоставляет нам *action (действие)*, `SAY_HELLO`, это *action creator (создатель действия)*, `sayHello`, это-функция. Мы используем [`redux-actions`](https://github.com/acdlite/redux-actions) для уменьшения шаблонов связанных с Redux actions (действия). `redux-actions` реализуют [Flux Standard Action](https://github.com/acdlite/flux-standard-action) (действие согласно архитектуре флакс) модель, который создает *action creators (создатель действия)* возвращает объект с ключами `type` и `payload`.
 
-- Create a `src/client/reducer/hello.js` file containing:
+- Создадим файл `src/client/reducer/hello.js` содержащий следующее:
 
 ```js
 // @flow
@@ -93,20 +93,19 @@ const helloReducer = (state: Immut = initialState, action: { type: string, paylo
 
 export default helloReducer
 ```
-
-In this file we initialize the state of our reducer with an Immutable Map containing one property, `message`, set to `Initial reducer message`. The `helloReducer` handles `SAY_HELLO` actions by simply setting the new `message` with the action payload. The Flow annotation for `action` destructures it into a `type` and a `payload`. The `payload` can be of `any` type. It looks funky if you've never seen this before, but it remains pretty understandable. For the type of `state`, we use the `import type` Flow instruction to get the return type of `fromJS`. We rename it to `Immut` for clarity, because `state: fromJS` would be pretty confusing. The `import type` line will get stripped out like any other Flow annotation. Note the usage of `Immutable.fromJS()` and `set()` as seen before.
+В этом файле мы проинициализировали состояние для нашего редьюсера при помощи неизменяемых данных, содержащих одно свойство `message`, со значением `Initial reducer message`. `helloReducer` обрабатывает `SAY_HELLO` экшен просто устанавливая новое `message (сообщение)` при помощи ключа action.payload. Flow проводит деструктуризацию `action` в `type` и `payload`. `payload` может быть `any (любого)` типа. Это сначала пугает, но потом становится довольно понятным. Для типизации `state`, мы используем `import type (импорт типа)` Flow инструкция для получения типа `fromJS`. Мы переименовали его в `Immut` для ясности, потому что `state: fromJS` выглядит довольно запутанным. `import type` линия будет удалена из исполняемых файлов, как и любая другая Flow ноттация. Обратите внимание на `Immutable.fromJS()` и `set()` которые вы видели ранее.
 
 ## React-Redux
 
-> 💡 **[react-redux](https://github.com/reactjs/react-redux)** *connects* a Redux store with React components. With `react-redux`, when the Redux store changes, React components get automatically updated. They can also fire Redux actions.
+> 💡 **[react-redux](https://github.com/reactjs/react-redux)** *connects (соединяет)* Redux store с React компонентами. Благодаря `react-redux`, когда the Redux store изменяется, React компоненты получают автоматические обновления. Они также могут Redux actions (действия).
 
-- Run `yarn add react-redux`
+- Запустите `yarn add react-redux`
 
-In this section we are going to create *Components* and *Containers*.
+В этой секции мы будем создавать *Components (Компоненты)* и *Containers (Контейнеры)*.
 
-**Components** are *dumb* React components, in a sense that they don't know anything about the Redux state. **Containers** are *smart* components that know about the state and that we are going to *connect* to our dumb components.
+**Components (Компоненты)** это *глупые* React компоненты, они ничего не знают о Redux state. **Containers (Контейнеры)** это *умные* которые знаю от состоянии и что мы собираемся *connect (подключить)* к нашим глупым компонентам.
 
-- Create a `src/client/component/button.jsx` file containing:
+- Создайте файл `src/client/component/button.jsx` содержащий:
 
 ```js
 // @flow
@@ -124,9 +123,9 @@ const Button = ({ label, handleClick }: Props) =>
 export default Button
 ```
 
-**Note**: You can see a case of Flow *type alias* here. We define the `Props` type before annotating our component's destructured `props` with it.
+**Примечание**: Здесь вы можете увидеть случай использования Flow *псевдоним типа*. Мы определяем тип `Props`, проводим деструктуризацию `props` и проверяем типы `props` согласно `Props`.--
 
-- Create a `src/client/component/message.jsx` file containing:
+- Создайте файл `src/client/component/message.jsx` содержащий:
 
 ```js
 // @flow
@@ -143,11 +142,11 @@ const Message = ({ message }: Props) =>
 export default Message
 ```
 
-These are examples of *dumb* components. They are logic-less, and just show whatever they are asked to show via React **props**. The main difference between `button.jsx` and `message.jsx` is that `Button` contains a reference to an action dispatcher in its props, where `Message` just contains some data to show.
+Здесь пример *глупых* компонентов. У них мало логики, и просто показывают все, что их просят показать через React **props**. Главное отличие между `button.jsx` и `message.jsx` это `Button` содержит ссылку на action dispatcher (диспечтер действий) в этих props, в то же время `Message` просто содержит некоторые данные для отображения.
 
-Again, *components* don't know anything about Redux **actions** or the **state** of our app, which is why we are going to create smart **containers** that will feed the proper action dispatchers and data to these 2 dumb components.
+Повторим, *components (компонент)* ничего не знает о Redux **actions (действия)** или **state (состояние)** в нашем приложении, поэтому мы собираемся создать умный **containers (контейнер)**, который будет предоставлять соответствующих action dispatchers (диспетчеров действий) для этих 2х глупых компонента.
 
-- Create a `src/client/container/hello-button.js` file containing:
+- Создайте файл `src/client/container/hello-button.js` содержащий:
 
 ```js
 // @flow
@@ -168,9 +167,9 @@ const mapDispatchToProps = dispatch => ({
 export default connect(mapStateToProps, mapDispatchToProps)(Button)
 ```
 
-This container hooks up the `Button` component with the `sayHello` action and Redux's `dispatch` method.
+Этот контейнер подключает `Button` компонент к `sayHello` action (действие) и Redux `dispatch (отправка)` метод.
 
-- Create a `src/client/container/message.js` file containing:
+- Создайте файл `src/client/container/message.js` содержащий:
 
 ```js
 // @flow
@@ -186,9 +185,9 @@ const mapStateToProps = state => ({
 export default connect(mapStateToProps)(Message)
 ```
 
-This container hooks up the Redux's app state with the `Message` component. When the state changes, `Message` will now automatically re-render with the proper `message` prop. These connections are done via the `connect` function of `react-redux`.
+Этот контейнер присоединяет Redux state приложения с `Message` компонент. Когда state (состояние) изменится, `Message` будет автоматически перерендерен с правильными prop (получаемые данные от родительского компонента) `message`. Эти соединения выполняются благодаря фунции `connect` из пакета `react-redux`. 
 
-- Update your `src/client/app.jsx` file like so:
+- Обновите ваш файл `src/client/app.jsx` согласно следующему примеру:
 
 ```js
 // @flow
@@ -208,9 +207,9 @@ const App = () =>
 export default App
 ```
 
-We still haven't initialized the Redux store and haven't put the 2 containers anywhere in our app yet:
+Мы все еще не имеем инициализированного Redux store и еще не поместили 2 контейнера в любоое место в нашем приложении:
 
-- Edit `src/client/index.jsx` like so:
+- Обновите ваш файл `src/client/index.jsx` согласно следующему примеру:
 
 ```js
 // @flow
@@ -253,19 +252,19 @@ if (module.hot) {
 }
 ```
 
-Let's take a moment to review this. First, we create a *store* with `createStore`. Stores are created by passing reducers to them. Here we only have one reducer, but for the sake of future scalability, we use `combineReducers` to group all of our reducers together. The last weird parameter of `createStore` is something to hook up Redux to browser [Devtools](https://github.com/zalmoxisus/redux-devtools-extension), which are incredibly useful when debugging. Since ESLint will complain about the underscores in `__REDUX_DEVTOOLS_EXTENSION__`, we disable this ESLint rule. Next, we conveniently wrap our entire app inside `react-redux`'s `Provider` component thanks to our `wrapApp` function, and pass our store to it.
+Давайте воспользуемся моментом для детального рассмотрения. Первое, мы создаем *store* благодаря `createStore`. Stores (хранилища) создаются проходя через соответсвующие reducers (редьюсеры). Здесь у нас есть только один редьюсер, но ради будущей масштабируемости, мы используем `combineReducers` для группировки всех наших редьюсеров вместе. Последний магический параметр `createStore` используется для доступа к Redux в браузере [Devtools](https://github.com/zalmoxisus/redux-devtools-extension), что невероятно полезно при отладке. Поскольку ESLint будет жаловаться на подчеркивания `__REDUX_DEVTOOLS_EXTENSION__`, мы отлключаем это ESLint правило. Далее, мы удобно оборачиваем наше приложение внутрь `react-redux`'s `Provider` компонент благодаря нашей `wrapApp` функци, и передаем наш store (хранилище) ему.
 
-🏁 You can now run `yarn start` and `yarn dev:wds` and hit `http://localhost:8000`. You should see "Initial reducer message" and a button. When you click the button, the message should change to "Hello!". If you installed the Redux Devtools in your browser, you should see the app state change over time as you click on the button.
+🏁 Ты можешь запустить `yarn start` и `yarn dev:wds` и перейди `http://localhost:8000`. Ты должен увидеть "Initial reducer message" и кнопку. Когда вы кликните на кнопку, сообщение должно измениться на "Hello!". Если вы установили Redux Devtools в вашем браузете, вы должны увидеть измениние state приложения, после того как вы кликните на кнопку.
 
-Congratulations, we finally made an app that does something! Okay it's not a *super* impressive from the outside, but we all know that it is powered by one badass stack under the hood.
+Подзравляем, мы наконец-то сделали приложение, которое делает что-то! Ладно, это не *супер* впечатляющией фронтенд, но мы ве знаем, что под капотом скрывается крутой стек.
 
-## Extending our app with an asynchronous call
+## Расширяем наше приложение асинхронными вызовами
 
-We are now going to add a second button to our app, which will trigger an AJAX call to retrieve a message from the server. For the sake of demonstration, this call will also send some data, the hard-coded number `1234`.
+Тепер мы собираемся добавить вторую кнопку в наше приложение, которая будет посылать AJAX запрос для получения сообщения с сервера. Для демонстрации этого вызова также будем отправлять некоторые данные, например захардкоженый номер `1234`.
 
-### The server endpoint
+### Сервер точка доступа
 
-- Create a `src/shared/routes.js` file containing:
+- Создайте файл `src/shared/routes.js` содержащий:
 
 ```js
 // @flow
@@ -274,16 +273,16 @@ We are now going to add a second button to our app, which will trigger an AJAX c
 export const helloEndpointRoute = (num: ?number) => `/ajax/hello/${num || ':num'}`
 ```
 
-This function is a little helper to produce the following:
+Эта фунция маленький помощник для воспроизведения следующего:
 
 ```js
 helloEndpointRoute()     // -> '/ajax/hello/:num' (for Express)
 helloEndpointRoute(1234) // -> '/ajax/hello/1234' (for the actual call)
 ```
 
-Let's actually create a test real quick to make sure this thing works well.
+Давайте быстро создадим настоящий тест, чтобы убедиться, что эта штука хорошо работает.
 
-- Create a `src/shared/routes.test.js` containing:
+- Создайте файл `src/shared/routes.test.js` содержащий:
 
 ```js
 import { helloEndpointRoute } from './routes'
@@ -294,9 +293,9 @@ test('helloEndpointRoute', () => {
 })
 ```
 
-- Run `yarn test` and it should pass successfully.
+- Запустите `yarn test` и убедитесь, что тесты проходят.
 
-- In `src/server/index.js`, add the following:
+- В `src/server/index.js`, добавьте следующее:
 
 ```js
 import { helloEndpointRoute } from '../shared/routes'
@@ -308,9 +307,9 @@ app.get(helloEndpointRoute(), (req, res) => {
 })
 ```
 
-### New containers
+### Новые контейнеры
 
-- Create a `src/client/container/hello-async-button.js` file containing:
+- Создайте файл `src/client/container/hello-async-button.js` содержащий следющее:
 
 ```js
 // @flow
