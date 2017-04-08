@@ -330,9 +330,10 @@ const mapDispatchToProps = dispatch => ({
 export default connect(mapStateToProps, mapDispatchToProps)(Button)
 ```
 
+В примере показывается как вы можете передать параметр в вашем асинхронронном запросе и сохранить вещи простыми, я захардкодаю тут `1234` значение. Это значение, как правило, приходит от заполненных пользователем полей формы.
 In order to demonstrate how you would pass a parameter to your asynchronous call and to keep things simple, I am hard-coding a `1234` value here. This value would typically come from a form field filled by the user.
 
-- Create a `src/client/container/message-async.js` file containing:
+- Создайте файл `src/client/container/message-async.js` содержащий следющее:
 
 ```js
 // @flow
@@ -348,21 +349,26 @@ const mapStateToProps = state => ({
 export default connect(mapStateToProps)(MessageAsync)
 ```
 
+Вы можете увидеть, что в этом контейнере, мы ссылаемся на `messageAsync` свойство, которое мы только собираемся добавить в наш редьюсер.
+
+Нам необходимо создать `sayHelloAsync` action (действие).
+
 You can see that in this container, we are referring to a `messageAsync` property, which we're going to add to our reducer soon.
 
 What we need now is to create the `sayHelloAsync` action.
 
 ### Fetch
 
-> 💡 **[Fetch](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch)** is a standardized JavaScript function to make asynchronous calls inspired by jQuery's AJAX methods.
+> 💡 **[Fetch](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch)**  это стандартизованная JavaScript функия выполняющая асинхронные запросы вдохновленная jQuery AJAX методом
 
-We are going to use `fetch` to make calls to the server from the client. `fetch` is not supported by all browsers yet, so we are going to need a polyfill. `isomorphic-fetch` is a polyfill that makes it work cross-browsers and in Node too!
 
-- Run `yarn add isomorphic-fetch`
+Мы собираемся использовать `fetch` для выполнения запросов с клиента на сервер. `fetch` поддерживается еще не всеми браузерами, поэтому нам понадобится полифилл. `isomorphic-fetch` это полифилл который работает кроссбраузерно и в Node.js он тоже работает!
 
-Since we're using `eslint-plugin-compat`, we need to indicate that we are using a polyfill for `fetch` to not get warnings from using it.
+- Запустите `yarn add isomorphic-fetch`
 
-- Add the following to your `.eslintrc.json` file:
+Так как мы используем `eslint-plugin-compat`, мы должны показать что мы используем полифилл для `fetch`, чтобы не получать уведомлений об ошибке при его использовании.
+
+- Добавьте следующее в ваш `.eslintrc.json` файл:
 
 ```json
 "settings": {
@@ -370,11 +376,11 @@ Since we're using `eslint-plugin-compat`, we need to indicate that we are using 
 },
 ```
 
-### 3 asynchronous actions
+### 3 асинхронных actions (действия)
 
-`sayHelloAsync` is not going to be a regular action. Asynchronous actions are usually split into 3 actions, which trigger 3 different states: a *request* action (or "loading"), a *success* action, and a *failure* action.
+`sayHelloAsync` не подходит для обычных action (действий). Асинхронные actions (действия) обычно разделяется на 3 actions (действвия), как триггер с 3мя разными состояниями: первый *запрос* action (или "загрузка"), второй *успех* action, и третий *неудача* action.
 
-- Edit `src/client/action/hello.js` like so:
+- Отредактируйте `src/client/action/hello.js` согласно следющему:
 
 ```js
 // @flow
@@ -411,11 +417,11 @@ export const sayHelloAsync = (num: number) => (dispatch: Function) => {
 }
 ```
 
-Instead of returning an action, `sayHelloAsync` returns a function which launches the `fetch` call. `fetch` returns a `Promise`, which we use to *dispatch* different actions depending on the current state of our asynchronous call.
+Вместо возврата действий, `sayHelloAsync` возвращает функцию, которая запускает `fetch` запрос. `fetch` возвращает `Promise`, который мы используем для *dispatch (отправки)* различные actions (действия) в зависимости от текущего состояния нашего асинхронного вызова.
 
-### 3 asynchronous action handlers
+### 3 асинхронные обработчики actions (действий)
 
-Let's handle these different actions in `src/client/reducer/hello.js`:
+Давайте обработаем эти различные actions (действия) в `src/client/reducer/hello.js`:
 
 ```js
 // @flow
@@ -453,15 +459,15 @@ const helloReducer = (state: Immut = initialState, action: { type: string, paylo
 export default helloReducer
 ```
 
-We added a new field to our store, `messageAsync`, and we update it with different messages depending on the action we receive. During `SAY_HELLO_ASYNC_REQUEST`, we show `Loading...`. `SAY_HELLO_ASYNC_SUCCESS` updates `messageAsync` similarly to how `SAY_HELLO` updates `message`. `SAY_HELLO_ASYNC_FAILURE` gives an error message.
+Мы добавили новое поле в наш store (хранилище), `messageAsync`, и мы обновим эти разные сообщения в зависимости от action действия, который мы получаем. Во время выполнения `SAY_HELLO_ASYNC_REQUEST`, мы показываем `Loading...`. `SAY_HELLO_ASYNC_SUCCESS` обновим `messageAsync` так же как `SAY_HELLO` обновил `message`. `SAY_HELLO_ASYNC_FAILURE` выдает сообщение об ошибке.
 
 ### Redux-thunk
 
-In `src/client/action/hello.js`, we made `sayHelloAsync`, an action creator that returns a function. This is actually not a feature that is natively supported by Redux. In order to perform these async actions, we need to extend Redux's functionality with the `redux-thunk` *middleware*.
+В `src/client/action/hello.js`, мы сделали `sayHelloAsync`, этот создатель действия вернул функцию. Эта фунция на самом деле не поддерживается нативно Redux. Для выполнения этих асинхронных actions (действий), нам необходимо расширить функциональнось Redux библиотекой `redux-thunk` *middleware (промежуточные функции)*.
 
-- Run `yarn add redux-thunk`
+- Запустите `yarn add redux-thunk`
 
-- Update your `src/client/index.jsx` file like so:
+- Обновите `src/client/index.jsx` согласно следующему:
 
 ```js
 // @flow
@@ -507,9 +513,9 @@ if (module.hot) {
 }
 ```
 
-Here we pass `redux-thunk` to Redux's `applyMiddleware` function. In order for the Redux Devtools to keep working, we also need to use Redux's `compose` function. Don't worry too much about this part, just remember that we enhance Redux with `redux-thunk`.
+Здесь мы передаем `redux-thunk` в Redux благодаря `applyMiddleware` функции. Для того, чтобы Redux Devtools продолжил работать, нам также нужно использовать фунцию Redux `compose`. Не волнуйтесь об этом, просто запомните, что мы улучшаем Redux благодаря `redux-thunk`.
 
-- Update `src/client/app.jsx` like so:
+- Обновите `src/client/app.jsx` согласно следующему:
 
 ```js
 // @flow
@@ -533,19 +539,19 @@ const App = () =>
 export default App
 ```
 
-🏁 Run `yarn start` and `yarn dev:wds` and you should now be able to click the "Say hello asynchronously and send 1234" button and retrieve a corresponding message from the server! Since you're working locally, the call is instantaneous, but if you open the Redux Devtools, you will notice that each click triggers both `SAY_HELLO_ASYNC_REQUEST` and `SAY_HELLO_ASYNC_SUCCESS`, making the message go through the intermediate `Loading...` state as expected.
+🏁 Запустите `yarn start` и `yarn dev:wds`, и вы сможете нажать на кнопку "Say hello asynchronously and send 1234" и получить соответствующеe сообщениe от сервера! Поскольку вы работаете локально, то вызов происходит мгновенно, но если вы откроете Redux Devtools, Вы заметите, что каждый клик срабатывает как `SAY_HELLO_ASYNC_REQUEST` и `SAY_HELLO_ASYNC_SUCCESS`, создавая сообщение `Loading...` в промежутке между функциями, как и ожидалось.
 
-You can congratulate yourself, that was an intense section! Let's wrap it up with some testing.
+Вы можете поздравить себя, это был напряженный раздел! Давайте покроем это сверху несколькими тестами.
 
-## Testing
+## Тестирование
 
-In this section, we are going to test our actions and reducer. Let's start with the actions.
+В этом разделе мы будем тестировать наши actions (действия) и reducer. Начнем с actions (действий).
 
-In order to isolate the logic that is specific to `action/hello.js` we are going to need to *mock* things that don't concern it, and also mock that AJAX `fetch` request which should not trigger an actual AJAX in our tests.
+Для того, чтобы изолировать логику, специфичную для `action/hello.js` мы собираемся использовать *mock (ложные)* данные, которые не касаются его, а также mock (ложный) AJAX `fetch` запрос, которая не должн вызвать AJAX в наших тестах.
 
-- Run `yarn add --dev redux-mock-store fetch-mock`
+- Запустите `yarn add --dev redux-mock-store fetch-mock`
 
-- Create a `src/client/action/hello.test.js` file containing:
+- Создайте файл `src/client/action/hello.test.js` содержащий:
 
 ```js
 import fetchMock from 'fetch-mock'
@@ -604,11 +610,11 @@ test('sayHelloAsync data error', () => {
 })
 ```
 
-Alright, Let's look at what's happening here. First we mock the Redux store using `const mockStore = configureMockStore([thunkMiddleware])`. By doing this we can dispatch actions without them triggering any reducer logic. For each test, we mock `fetch` using `fetchMock.get()` and make it return whatever we want. What we actually test using `expect()` is which series of actions have been dispatched by the store, thanks to the `store.getActions()` function from `redux-mock-store`. After each test we restore the normal behavior of `fetch` with `fetchMock.restore()`.
+Отлично, давайте посмотрим на то, что здесь происходит. Сначала мы используем mock (ложный) Redux store (хранилище) `const mockStore = configureMockStore([thunkMiddleware])`. Делая это, мы можем послать какие-либо действия без их срабатывания логики reducer'a. Для каждого теста, `fetch` мы используем ложный `fetchMock.get()` и заставляем его вернуть то, что мы хотим. Чтобы проверить, мы используем `expect()`, сравнить какая серия действий была направлена в store (хранилище), благодаря `store.getActions()` функции из `redux-mock-store`. После каждого испытания мы восстанавливаем нормальное поведение `fetch` при помощи `fetchMock.restore()`.
 
-Let's now test our reducer, which is much easier.
+Теперь давайте протестируем наш reducer, который намного легче.
 
-- Create a `src/client/reducer/hello.test.js` file containing:
+- Создайте `src/client/reducer/hello.test.js` файл содержащий:
 
 ```js
 import {
@@ -652,10 +658,10 @@ test('handle SAY_HELLO_ASYNC_FAILURE', () => {
 })
 ```
 
-Before each test, we initialize `helloState` with the default result of our reducer (the `default` case of our `switch` statement in the reducer, which returns `initialState`). The tests are then very explicit, we just make sure the reducer updates `message` and `messageAsync` correctly depending on which action it received.
+Перед каждым тестом, мы инициализируем `helloState` с результатом по умолчанию нашего reducer (`по умолчанию` пример `переключения` состояния в reducer, который возвращает `initialState (начальное состояние)`). Тест очень точный, мы просто убеждаемся, что reducer обновляет `message` и `messageAsync` корректно в зависимости от действия, которое получил.
 
-🏁 Run `yarn test`. It should be all green.
+🏁 Запустите `yarn test`. Они должны быть зеленые.
 
-Next section: [06 - React Router, Server-Side Rendering, Helmet](06-react-router-ssr-helmet.md#readme)
+Следующая секция: [06 - Реакт роутер, Рендер на стороне сервера, Helmet](06-react-router-ssr-helmet.md#readme)
 
-Back to the [previous section](04-webpack-react-hmr.md#readme) or the [table of contents](https://github.com/verekia/js-stack-from-scratch#table-of-contents).
+Назад к [предыдущей секции](04-webpack-react-hmr.md#readme) или [содержание](https://github.com/verekia/js-stack-from-scratch#table-of-contents).
