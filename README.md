@@ -39,9 +39,9 @@
 
 [04 - Webpack, React, HMR](/tutorial/04-webpack-react-hmr.md)
 
-[05 - Redux, Immutable, Fetch](/tutorial/05-redux-immutable-fetch.md)
+[05 - Redux, Immutable, Fetch](/tutorial/05-redux-immutable-fetch_ru.md)
 
-[06 - React Router, Server-Side Rendering, Helmet](/tutorial/06-react-router-ssr-helmet.md)
+[06 - React Router, Server-Side Rendering, Helmet](/tutorial/06-react-router-ssr-helmet_ru.md)
 
 [07 - Socket.IO](/tutorial/07-socket-io.md)
 
