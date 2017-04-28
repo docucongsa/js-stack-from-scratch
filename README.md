@@ -31,7 +31,7 @@
 
 ## Содержание
 
-[01 - Node, Yarn, `package.json`](/tutorial/01-node-yarn-package-json.md)
+[01 - Node, Yarn, `package.json`](/tutorial/01-node-yarn-package-json_ru.md)
 
 [02 - Babel, ES6, ESLint, Flow, Jest, Husky](/tutorial/02-babel-es6-eslint-flow-jest-husky.md)
 
