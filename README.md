@@ -33,7 +33,7 @@
 
 [01 - Node, Yarn, `package.json`](/tutorial/01-node-yarn-package-json_ru.md)
 
-[02 - Babel, ES6, ESLint, Flow, Jest, Husky](/tutorial/02-babel-es6-eslint-flow-jest-husky.md)
+[02 - Babel, ES6, ESLint, Flow, Jest, Husky](/tutorial/02-babel-es6-eslint-flow-jest-husky.md) ![en](https://img.shields.io/badge/ver-en-blue.svg)
 
 [03 - Express, Nodemon, PM2](/tutorial/03-express-nodemon-pm2_ru.md)
 
@@ -43,11 +43,11 @@
 
 [06 - React Router, Server-Side Rendering, Helmet](/tutorial/06-react-router-ssr-helmet_ru.md)
 
-[07 - Socket.IO](/tutorial/07-socket-io.md)
+[07 - Socket.IO](/tutorial/07-socket-io.md) ![en](https://img.shields.io/badge/ver-en-blue.svg)
 
-[08 - Bootstrap, JSS](/tutorial/08-bootstrap-jss.md)
+[08 - Bootstrap, JSS](/tutorial/08-bootstrap-jss.md) ![en](https://img.shields.io/badge/ver-en-blue.svg)
 
-[09 - Travis, Coveralls, Heroku](/tutorial/09-travis-coveralls-heroku.md)
+[09 - Travis, Coveralls, Heroku](/tutorial/09-travis-coveralls-heroku.md) ![en](https://img.shields.io/badge/ver-en-blue.svg)
 
 ## Далее планируется
 
