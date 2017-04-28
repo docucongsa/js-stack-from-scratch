@@ -12,7 +12,7 @@
 [![Webpack](/img/webpack-padded-90.png)](https://webpack.github.io/)
 [![Bootstrap](/img/bootstrap-padded-90.png)](http://getbootstrap.com/)
 
->Это русскоязычная версия руководства Джонатана Верекии ([@verekia](https://twitter.com/verekia)). Оригинальное руководство расположено [здесь](https://github.com/verekia/js-stack-from-scratch). **Начата [работа](https://github.com/UsulPro/js-stack-from-scratch/issues/8) по переводу второй части**
+>Это русскоязычная версия руководства Джонатана Верекии ([@verekia](https://twitter.com/verekia)). Оригинальное руководство расположено [здесь](https://github.com/verekia/js-stack-from-scratch). **Начата [работа](https://github.com/UsulPro/js-stack-from-scratch/issues/8) по переводу второй части**. Первая версия находится [тут](https://github.com/UsulPro/js-stack-from-scratch-v1-rus)
 
 Добро пожаловать в мое современное руководство по стеку технологий JavaScript: **Стек технологий JavaScript с нуля**.
 
